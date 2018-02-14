@@ -77,48 +77,38 @@
             var userGuess = event.key;
 
 
-            // I kind of solved the problem of if they they guess a duplicate letter
-            // but I feel like there must be a better way to do it without rearanging the order 
-            // of the "Guessed letters sectionn by somehow blocking the new duplicate entry instead 
-            // of just deleting the original entry?
-
-
+        
+            // this function is half working...it only pushes the user guess into the array if it
+            // is not a duplicate like its supposed to, but the problem is that it does not display 
+            // the message when userguess IS a duplicate. which means there must be an issue with the formula 
+            // in the "if" statement.  
+            
             function duplicate(){
-                for (i=0; i<previousGuesses.length; i++){
-                    if (userGuess === previousGuesses[i]){
-                        gameMessage.textContent = ("You have Already guessed \"" + userGuess + "\".")
-                        delete previousGuesses[i];
-                        
-                    }                        
+                if (previousGuesses.indexOf(userGuess) !== -1) {
+                    gameMessage.textContent = ("You have Already guessed \"" + userGuess + "\".")
+                }   
+                else {
+                    previousGuesses.push(userGuess);
                 }
             }
                 
             duplicate();
             
-            previousGuesses.push(userGuess);
-            
-            
-            // Here's where I'm having the main problem. By itself the first if statement works fine 
-            // and puts correctly guessed letters in thier spots and prints the "good job" message.
-            // but I tried a bunch of different opitons for if they guess wrong including the two 
-            // commented out below and they all make every guess yield the "ooops" message even if correct...
-            
             function compare(){
+                var correctGuess = false;
                 for (i=0; i<answer.length; i++){
                     if (userGuess == answer[i]){
+                        correctGuess = true;
                         blanksArray[i] = answer[i];  
                         blanks.textContent =(blanksArray.join(' '));   
-                        gameMessage.textContent = ("Good Guess! Keep Going!");
                     }    
-                 // else {
-                 //     gameMessage.textContent = ("Oops, try again!"); 
-                 // }
-
-                 // if (userGuess !== answer[i]){
-                 //    gameMessage.textContent = ("Oops, try again!");    
-                 // }
-                    
-
+                }       
+                if (correctGuess == true){         
+                    gameMessage.textContent = ("Good Guess! Keep Going!");
+                }
+                
+                else {
+                    gameMessage.textContent = ("Oops, try again!"); 
                 }
             } 
         
