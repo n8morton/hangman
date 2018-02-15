@@ -45,23 +45,25 @@
     
     
     document.getElementById("startButton").onclick = function (event){
+    document.getElementById("startButton").style.visibility="hidden";
 
+    blanksArray.length=0
+    strikes=0
+    
+    
+    var answer = wordBank[Math.floor(Math.random()*wordBank.length)];
         
-        document.getElementById("startButton").style.visibility="hidden";
-        
-        var answer = wordBank[Math.floor(Math.random()*wordBank.length)];
-        
-        gameMessage.textContent = ("There are " + answer.length + " letters in the word. Please guess a letter." );
-        guessedLetters.textContent =("Guessed Letters: ")
-        strikeCounter.textContent = ("Strikes:")
+    gameMessage.textContent = ("There are " + answer.length + " letters in the word. Please guess a letter." );
+    guessedLetters.textContent =("Guessed Letters: ")
+    strikeCounter.textContent = ("Strikes:")
 
-        function setBlanks(){
-            for (i=0; i<answer.length; i++){
-                blanksArray.push("_");
+    function setBlanks(){
+        for (i=0; i<answer.length; i++){
+            blanksArray.push("_");
             }
         }
         
-        setBlanks();
+    setBlanks();
         
         blanks.textContent =(blanksArray.join(' '))
 
@@ -113,28 +115,29 @@
             } 
         
             compare();
-
+        
             function endgame(){
                 if (strikes == 5){
                     gameMessage.textContent = ("Sorry, You Lose... Click Button To Play Again!" );
                     document.getElementById("startButton").style.visibility="visible";
                     document.onkeyup = null;
+                    
                 } 
             }
 
             endgame()  
-
-            
-        
-            
-            
-            
-        
-
-            
         }
+    }        
+        
+            
+            
+            
+        
+
+            
+        
  
-    }
+    
 
   
 
