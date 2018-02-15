@@ -9,15 +9,19 @@
 <body>
     
 
-  <div id="game">
+  <div align=center id="game">
       
-    <button id="startButton" type="button"><span id="button=text">Click To Start Hangman!</span></button>
+    <button id="startButton" type="button"><span style=font-size:2em id="button=text">Click To Start Hangman!</span></button>
     
     <h1> <span id="game-message"><strong></strong></span></h1>
       
-    <p id="blanks"></p>
-    <p id="guessed-letters"></p>
-    <p id ="score"></p>
+    <br><br><br><br><br><br>
+    
+    <p style=font-size:5em id="blanks"></p>
+
+    <br><br>
+    <p><span style=padding-right:100px id ="guessed-letters"></span> <span  style=padding-left:100px id="strike-counter"></span></p>
+    
      
   </div>
 
@@ -26,11 +30,12 @@
     var gameMessage = document.getElementById("game-message");    
     var blanks = document.getElementById("blanks");
     var guessedLetters = document.getElementById("guessed-letters");
-    var score =document.getElementById("score")
+    var strikeCounter =document.getElementById("strike-counter")
     
     var previousGuesses =[];
     var blanksArray = [];
     var lettersArray = [];
+    var strikes = 0;
    
     
     
@@ -42,13 +47,13 @@
     document.getElementById("startButton").onclick = function (event){
 
         
-        document.getElementById("startButton").style.visibility='hidden';
+        document.getElementById("startButton").style.visibility="hidden";
         
         var answer = wordBank[Math.floor(Math.random()*wordBank.length)];
         
         gameMessage.textContent = ("There are " + answer.length + " letters in the word. Please guess a letter." );
         guessedLetters.textContent =("Guessed Letters: ")
-        score.textContent = ("Score: ")
+        strikeCounter.textContent = ("Strikes:")
 
         function setBlanks(){
             for (i=0; i<answer.length; i++){
@@ -76,24 +81,8 @@
         document.onkeyup = function(event) {
             var userGuess = event.key;
 
+        console.log(previousGuesses.indexOf(userGuess));
 
-        
-            // this function is half working...it only pushes the user guess into the array if it
-            // is not a duplicate like its supposed to, but the problem is that it does not display 
-            // the message when userguess IS a duplicate. which means there must be an issue with the formula 
-            // in the "if" statement.  
-            
-            function duplicate(){
-                if (previousGuesses.indexOf(userGuess) !== -1) {
-                    gameMessage.textContent = ("You have Already guessed \"" + userGuess + "\".")
-                }   
-                else {
-                    previousGuesses.push(userGuess);
-                }
-            }
-                
-            duplicate();
-            
             function compare(){
                 var correctGuess = false;
                 for (i=0; i<answer.length; i++){
@@ -102,21 +91,47 @@
                         blanksArray[i] = answer[i];  
                         blanks.textContent =(blanksArray.join(' '));   
                     }    
-                }       
-                if (correctGuess == true){         
+                }
+                if (previousGuesses.indexOf(userGuess) !== -1) {
+                    gameMessage.textContent = ("You have already guessed \"" + userGuess + "\".");
+                }
+                else{
+
+                    if (correctGuess == true){         
                     gameMessage.textContent = ("Good Guess! Keep Going!");
-                }
+                    previousGuesses.push(userGuess);
+                    }
                 
-                else {
+                    else {
                     gameMessage.textContent = ("Oops, try again!"); 
+                    previousGuesses.push(userGuess);
+                    strikes++;
+                    strikeCounter.textContent = ("Strikes: " + strikes);
+                    }
                 }
+                guessedLetters.textContent = ("Guessed Letters: " + previousGuesses.join(" "));
             } 
         
             compare();
-        
-            console.log(blanksArray);
+
+            function endgame(){
+                if (strikes == 5){
+                    gameMessage.textContent = ("Sorry, You Lose... Click Button To Play Again!" );
+                    document.getElementById("startButton").style.visibility="visible";
+                    document.onkeyup = null;
+                } 
+            }
+
+            endgame()  
+
             
-            guessedLetters.textContent = ("Guessed Letters: " + previousGuesses.join(" "));
+        
+            
+            
+            
+        
+
+            
         }
  
     }
