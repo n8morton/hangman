@@ -20,7 +20,7 @@
     <p style=font-size:5em id="blanks"></p>
 
     <br><br>
-    <p><span style=padding-right:100px id ="guessed-letters"></span> <span  style=padding-left:100px id="strike-counter"></span></p>
+    <p><span style=padding-right:100px id ="guessed-letters"></span> <span style=padding-right:100px id="score"></span><span  style=padding-left:100px id="strike-counter"></span></p>
     
      
     </div>
@@ -32,11 +32,16 @@
         var guessedLetters = document.getElementById("guessed-letters");
         var strikeCounter = document.getElementById("strike-counter");
         var startButton = document.getElementById("startButton");
+        var displayScore = document.getElementById("score");
     
         var previousGuesses =[];
         var blanksArray = [];
         var lettersArray = [];
+        var combo = 0;
         var strikes = 0;
+        var score = 0;
+        var correctGuess;
+
    
     
     
@@ -48,18 +53,20 @@
         startButton.onclick = function (event){
         startButton.style.visibility="hidden";
 
-        blanksArray.length=0
-        strikes=0
-        previousGuesses.length=0
+        blanksArray.length=0;
+        strikes=0;
+        previousGuesses.length=0;
 
     
     
         var answer = wordBank[Math.floor(Math.random()*wordBank.length)];
         
         gameMessage.textContent = ("There are " + answer.length + " letters in the word. Please guess a letter." );
-        guessedLetters.textContent =("Guessed Letters: ")
-        strikeCounter.textContent = ("Strikes:")
-
+        guessedLetters.textContent =("Guessed Letters: ");
+        strikeCounter.textContent = ("Strikes: " + strikes);
+        displayScore.textContent = ("Score: " + score);
+        
+        
         function setBlanks(){
             for (i=0; i<answer.length; i++){
                 blanksArray.push("_");
@@ -84,18 +91,23 @@
         console.log(lettersArray)
 
         document.onkeyup = function(event) {
-            var userGuess = event.key;
+            var userGuess = event.key.toLowerCase();
+            if (userGuess.length !==1 || userGuess < "a" || userGuess > "z" ){
+                return
+            }
             
-
+            
         
 
             function compare(){
-                var correctGuess = false;
+                correctGuess = false;
                 for (i=0; i<answer.length; i++){
                     if (userGuess == answer[i]){
                         correctGuess = true;
                         blanksArray[i] = answer[i];  
-                        blanks.textContent =(blanksArray.join(' '));   
+                        blanks.textContent =(blanksArray.join(' '));
+                        score = (score + 10 +(combo * 10));
+
                     }    
                 }
                     if (previousGuesses.indexOf(userGuess) !== -1) {
@@ -105,7 +117,7 @@
 
                         if (correctGuess == true){         
                         gameMessage.textContent = ("Good Guess! Keep Going!");
-                        previousGuesses.push(userGuess);
+                        previousGuesses.push(userGuess);                        
                         }
                 
                         else {
@@ -113,12 +125,20 @@
                         previousGuesses.push(userGuess);
                         strikes++;
                         strikeCounter.textContent = ("Strikes: " + strikes);
+                        score = (score - 5); 
+                        combo = 0;                      
                         }
                     }
                     guessedLetters.textContent = ("Guessed Letters: " + previousGuesses.join(" "));
+                    displayScore.textContent = ("Score: " + score);
             } 
         
                 compare();
+
+                if (correctGuess == true){
+                    combo++;
+                }
+
         
                 function endgame(){
                     if (strikes == 5){
@@ -129,7 +149,7 @@
                     }
 
                     if (blanksArray.indexOf("_") == -1){
-                        gameMessage.textContent = ("Congratulation, You Win!" );
+                        gameMessage.textContent = ("Congratulations, You Win!" );
                         document.getElementById("startButton").style.visibility="visible";
                         document.onkeyup = null;    
                         startButton.textContent = ("Click To Play Again");
