@@ -41,6 +41,7 @@
         var strikes = 0;
         var score
         var correctGuess;
+        var numberCorrect;
 
    
     
@@ -101,14 +102,15 @@
         
 
             function compare(){
+                numberCorrect=0;
                 correctGuess = false;
                 for (i=0; i<answer.length; i++){
                     if (userGuess == answer[i]){
                         correctGuess = true;
-                        blanksArray[i] = answer[i];  
+                        blanksArray[i] = answer[i]; 
+                        numberCorrect++; 
                         blanks.textContent =(blanksArray.join(' '));
-                        score = (score + 10 +(combo * 10));
-
+                        
                     }    
                 }
                     if (previousGuesses.indexOf(userGuess) !== -1) {
@@ -118,7 +120,11 @@
 
                         if (correctGuess == true){         
                         gameMessage.textContent = ("Good Guess! Keep Going!");
-                        previousGuesses.push(userGuess);                        
+                        previousGuesses.push(userGuess);     
+                            for(i=0; i<numberCorrect; i++){
+                                score = (score + 10 +(combo * 10));  
+                            } 
+                        combo++;                
                         }
                 
                         else {
@@ -138,9 +144,6 @@
         
                 compare();
 
-                if (correctGuess == true){
-                    combo++;
-                }
 
         
                 function endgame(){
